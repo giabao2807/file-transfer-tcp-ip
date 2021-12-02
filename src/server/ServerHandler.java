@@ -47,13 +47,15 @@ public class ServerHandler extends Thread {
 
 		while (!isStop) {
 			try {
-
+				readData();
 			} catch (Exception e) {
-				// TODO: handle exception
+				connectClientFail();
+				e.printStackTrace();
+				break;
 			}
 		}
-
 		System.out.println("Complete processing: " + socket);
+		closeSocket();
 	}
 
 	void readData() throws Exception {
@@ -68,7 +70,9 @@ public class ServerHandler extends Thread {
 				readFile(obj);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			connectClientFail();
+			closeSocket();
 		}
 	}
 
