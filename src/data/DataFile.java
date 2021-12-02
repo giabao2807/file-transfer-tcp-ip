@@ -56,7 +56,6 @@ public class DataFile implements Serializable {
 		try {
 			Files.write(path, data);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
