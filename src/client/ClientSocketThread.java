@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
@@ -190,6 +191,24 @@ public class ClientSocketThread extends Thread {
 				
 			}
 			sendType=Send_Type.DO_NOT_SEND;
+		}
+		
+		private synchronized void sendMessage(Object obj) {
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream(os);
+				
+				//only send text
+				if(obj instanceof String) {
+					String message = obj.toString();
+					oos.writeObject(message);
+					oos.flush();
+				} else if (obj instanceof DataFile) {
+					oos.writeObject(obj);
+					oos.flush();
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 	}
 
