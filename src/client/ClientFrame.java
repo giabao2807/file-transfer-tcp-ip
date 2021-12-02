@@ -185,7 +185,14 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 				clientSocketThread.sendString("DOWNLOAD_FILE" + "--" +str);
 			}
 		} else if (e.getSource()==uploadFileButton) {
-			
+			JFileChooser fileChooser = new JFileChooser();
+			int returnVal = fileChooser.showOpenDialog(this);
+			//fileChooser.showOpenDialog(null);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File fileToSave = fileChooser.getSelectedFile();
+				String filePath = fileToSave.getAbsolutePath();
+				clientSocketThread.sendFile(filePath);
+			}
 		}
 	}
 

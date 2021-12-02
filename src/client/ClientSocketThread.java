@@ -132,6 +132,13 @@ public class ClientSocketThread extends Thread {
 		sendType = Send_Type.SEND_STRING;
 		message = str;
 	}
+	
+	void sendFile(String filename) {
+		System.out.println("SENDING FILE  " );
+		sendType = Send_Type.SEND_FILE;
+		this.filename=filename;
+		
+	}
 
 	private void connectServerFail() {
 		// TODO Auto-generated method stub
