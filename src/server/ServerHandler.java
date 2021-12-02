@@ -90,5 +90,22 @@ public class ServerHandler extends Thread {
 		iSocketServerListener.showProgessBarPercent(percent);
 	}
 	
+	private void connectClientFail() {
+		isStop=true;
+		closeSocket();
+	}
+	private void closeSocket() {
+		try {
+			this.sendString("STOP");
+			if(socket != null) socket.close();
+			if(os!=null) os.close();
+			if(is!=null) is.close();
+			iSocketServerListener.showDialog("Closed Server Socket", "INFOR");
+		} catch (Exception e) {
+			e.printStackTrace();
+			iSocketServerListener.showDialog("Connect Fail", "ERROR");
+		}
+	}
+	
 	
 }
