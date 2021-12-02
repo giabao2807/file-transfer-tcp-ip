@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 
 import javax.xml.crypto.Data;
 
@@ -65,8 +66,9 @@ public class ClientSocketThread extends Thread {
 			try {
 				readData();
 			} catch (Exception e) {
-				// TODO: handle exception
-			}
+				connectServerFail();
+				e.printStackTrace();
+				break;			}
 
 		}
 	}
@@ -78,9 +80,9 @@ public class ClientSocketThread extends Thread {
 			Object obj = ois.readObject();
 
 			if (obj instanceof String) {
-
+				readString(obj);
 			} else if (obj instanceof DataFile) {
-
+				readFile(obj);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,6 +90,32 @@ public class ClientSocketThread extends Thread {
 			closeSocket();
 		}
 
+	}
+	void readString(Object obj) {
+		String str = obj.toString();
+		if(str.equals("STOP"))
+			isStop=true;
+		else if (str.contains("START_SEND_FILE")) {
+			this.sendType = Send_Type.START_SEND_FILE;
+		} else if (str.contains("SEND_FILE")) {
+			String[] fileInfor = str.split("--");
+			fileNameReceived = fileInfor[1];
+			fileSize = Integer.parseInt(fileInfor[2]);
+			
+			System.out.println("File Size: " +  fileSize);
+			currentSize=0;
+			m_dtf.clear();
+			this.sendString("START_SEND_FILE");
+		} else if (str.contains("END_FILE")) {
+			iSocketListener.chooserFileToSave(m_dtf);
+		} else if (str.contains("ALL_FILE")) {
+			String[] listFile = str.split("--");
+			String[] yourArray = Arrays.copyOfRange(listFile,1, listFile.length);
+			iSocketListener.updateListFile(yourArray);
+		} else if (str.contains("ERROR")) {
+			String[] list = str.split("--");
+			iSocketListener.showDialog(list[1], "ERROR");
+		}
 	}
 
 	void readFile(Object obj) throws Exception {
