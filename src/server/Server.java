@@ -6,52 +6,55 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server implements ISocketServerListener{
-	private final static int NUM_OF_THREAD = 10;
-	private final static int PORT =2807;
-	
+public class Server implements ISocketServerListener {
+	public static final int NUM_OF_THREAD = 10;
+	public final static int SERVER_PORT = 2807;
+
 	public static void main(String[] args) throws IOException {
 		Server server = new Server();
 		ExecutorService executor = Executors.newFixedThreadPool(NUM_OF_THREAD);
-		ServerSocket serverSocket =null;
+		ServerSocket serverSocket = null;
 		try {
-			System.out.println("Binding to port " + PORT + ", please wait...");
-			serverSocket = new ServerSocket(PORT);
+			System.out.println("Binding to port " + SERVER_PORT + ", please wait  ...");
+			serverSocket = new ServerSocket(SERVER_PORT);
 			System.out.println("Server started: " + serverSocket);
-			System.out.println("Waiting for a client...");
-			while(true) {
+			System.out.println("Waiting for a client ...");
+			while (true) {
 				try {
 					Socket socket = serverSocket.accept();
 					System.out.println("Client accepted: " + socket);
-					
-					
+
+					ServerHandler handler = new ServerHandler(socket, server);
+					executor.execute(handler);
 				} catch (IOException e) {
-					System.out.println("Connection Error: " + e);
+					System.err.println(" Connection Error: " + e);
 				}
 			}
+
 		} catch (Exception e) {
+			// TODO: handle exception
 			e.printStackTrace();
 		} finally {
-			if(serverSocket!=null) {
+			if (serverSocket != null) {
 				serverSocket.close();
 			}
 		}
-		
 	}
-	
+
 	@Override
 	public void connectFail() {
+		// TODO Auto-generated method stub
 		System.out.println("Connect to client fail, client was disconnected.");
 	}
 
 	@Override
-	public void showProgessBarPercent(long l) {
-		System.out.println("Da gui duoc: " + l + "%");
+	public void showProgessBarPercent(long i) {
+		// TODO Auto-generated method stub
+		System.out.println("Da gui duoc: " + i + "%");
 	}
 
 	@Override
 	public void showDialog(String message, String type) {
-		System.out.println(type + ": " + message);
+		System.out.println(type + " : " + message);
 	}
-
 }

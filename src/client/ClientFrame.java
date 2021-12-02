@@ -31,8 +31,9 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 			public void run() {
 				try {
 					ClientFrame frame = new ClientFrame();
+
 				} catch (Exception e) {
-					System.out.println(e);
+					e.printStackTrace();
 				}
 			}
 		});
@@ -111,12 +112,64 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 	}
 
 	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource() == connectButton) {
+			String ip = ipInput.getText();
+			String port = portInput.getText();
+			System.out.println(ip + " : " + port);
+			try {
+				clientSocketThread = new ClientSocketThread(this);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			clientSocketThread.setSocket(ip, Integer.parseInt(port));
+			clientSocketThread.start();
+		} else if (e.getSource() == disconnectButton) {
+
+			String[] data = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+			list.setListData(data);
+			if (clientSocketThread == null) {
+				this.showDialog("Chua bat SOCKET", "INFOR");
+				return;
+			}
+			clientSocketThread.closeSocket();
+		} else if (e.getSource() == searchButton) {
+			String search = searchInput.getText();
+
+			if (clientSocketThread != null) {
+				if (search.isEmpty())
+					clientSocketThread.sendString("VIEW_ALL_FILE");
+				else
+					clientSocketThread.sendString("SEARCH_FILE" + "--" + search);
+			}
+		} else if (e.getSource() == downLoadFile) {
+			if (list.getSelectedIndex() != -1) {
+				String str = list.getSelectedValue();
+				List<String> lists = list.getSelectedValuesList();
+				clientSocketThread.sendString("DOWNLOAD_FILE" + "--" + str);
+			}
+		} else if (e.getSource() == uploadFileButton) {
+			JFileChooser fileChooser = new JFileChooser();
+			int returnVal = fileChooser.showOpenDialog(this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File fileToSave = fileChooser.getSelectedFile();
+				String filePath = fileToSave.getPath();
+				clientSocketThread.sendFile(filePath);
+			}
+		}
+	}
+
+	@Override
 	public void updateListFile(String[] listFile) {
+		// TODO Auto-generated method stub
 		list.setListData(listFile);
 	}
 
 	@Override
-	public void setProgess(int n) {
+	public void setProgress(int n) {
+		// TODO Auto-generated method stub
 		jb.setValue(n);
 	}
 
@@ -143,57 +196,6 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == connectButton) {
-			String ip = ipInput.getText();
-			String port = portInput.getText();
-
-			System.out.println(ip + " : " + port);
-			try {
-				clientSocketThread = new ClientSocketThread(this);
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-
-			clientSocketThread.setSocket(ip, Integer.parseInt(port));
-			clientSocketThread.start();
-		} else if (e.getSource() == disconnectButton) {
-			String[] data = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-			list.setListData(data);
-
-			if (clientSocketThread == null) {
-				this.showDialog("Chua bat SOCKET", "INFOR");
-				return;
-			}
-			clientSocketThread.closeSocket();
-		} else if (e.getSource() == searchButton) {
-			String search = searchInput.getText();
-
-			if (clientSocketThread != null) {
-				if (search.isEmpty())
-					clientSocketThread.sendString("VIEW_ALL_FILE");
-				else
-					clientSocketThread.sendString("SEARCH_FILE" + "--" + search);
-			}
-		} else if (e.getSource() == downLoadFile) {
-			if (list.getSelectedIndex()!=-1) {
-				String str = list.getSelectedValue();
-				List<String> lists = list.getSelectedValuesList();
-				clientSocketThread.sendString("DOWNLOAD_FILE" + "--" +str);
-			}
-		} else if (e.getSource()==uploadFileButton) {
-			JFileChooser fileChooser = new JFileChooser();
-			int returnVal = fileChooser.showOpenDialog(this);
-			//fileChooser.showOpenDialog(null);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File fileToSave = fileChooser.getSelectedFile();
-				String filePath = fileToSave.getAbsolutePath();
-				clientSocketThread.sendFile(filePath);
-			}
-		}
 	}
 
 }

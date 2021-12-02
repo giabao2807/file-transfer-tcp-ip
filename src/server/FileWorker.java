@@ -3,38 +3,35 @@ package server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-
 public class FileWorker {
-	public static String URL_FOLDER ="/Users/dinhgiabao/Desktop/HK1-nam3/pbl4/abc";
-	
+
+	public static String URL_FOLDER = "/Users/dinhgiabao/Desktop/HK1-nam3/pbl4/abc";
+
 	String[] getAllFileName() {
 		File file = new File(URL_FOLDER);
 		String[] files = file.list();
-		
+
 		return files;
 	}
-	
+
 	String[] searchFile(String keyword) {
 		File file = new File(URL_FOLDER);
 		String[] files = file.list();
-		
-		List<String> fileSearches = new ArrayList<String>();
-		for(String file1 : files) {
-			if(searchStringInFile(file1, keyword))
+		ArrayList<String> fileSearches = new ArrayList<String>();
+		for (String file1 : files)
+			if (searchStringInFile(URL_FOLDER + "/" + file1, keyword))
 				fileSearches.add(file1);
-		}
-		for(int i=0;i<fileSearches.size();i++) {
-			System.out.println("File searches: " + fileSearches.get(i));
-		}
-		
-		String[] rs = new String[fileSearches.size()];
-		rs = fileSearches.toArray(rs);
-		return rs;
+		for (int i = 0; i < fileSearches.size(); i++)
+			System.out.println("File searches : " + fileSearches.get(i));
+//		if (fileSearches.isEmpty())
+//			return null;
+
+		String[] result = new String[fileSearches.size()];
+		result = fileSearches.toArray(result);
+		return result;
 	}
-	
 
 	boolean searchStringInFile(String fileName, String keyword) {
 		File file = new File(fileName);
@@ -56,8 +53,9 @@ public class FileWorker {
 		}
 		return false;
 	}
-	
+
 	public boolean checkFile(String fileNameReceived) {
+		// TODO Auto-generated method stub
 		File file = new File(URL_FOLDER);
 		String[] files = file.list();
 		for (String file1 : files)
@@ -65,7 +63,7 @@ public class FileWorker {
 				return false;
 		return true;
 	}
-	
+
 	public String getFileName(String str) {
 		String result = "";
 		int len = str.length();
@@ -77,5 +75,4 @@ public class FileWorker {
 
 		return null;
 	}
-	
 }
