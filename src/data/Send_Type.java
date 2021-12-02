@@ -1,4 +1,4 @@
-package utils;
+package data;
 
 public enum Send_Type {
 	DO_NOT_SEND,

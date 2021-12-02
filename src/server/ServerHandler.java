@@ -7,8 +7,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import utils.FileUtils;
-import utils.Send_Type;
+import data.DataFile;
+import data.Send_Type;
 
 public class ServerHandler extends Thread {
 	private Socket socket;
@@ -28,7 +28,7 @@ public class ServerHandler extends Thread {
 	private long fileSize;
 	private String fileNameReceived;
 	private long currentSize;
-	FileUtils utils;
+	DataFile utils;
 
 	public ServerHandler(Socket soc, ISocketServerListener iSocketServerListener) throws IOException {
 		this.socket = soc;
@@ -38,7 +38,7 @@ public class ServerHandler extends Thread {
 		this.iSocketServerListener = iSocketServerListener;
 		fileWorker = new FileWorker();
 
-		utils = new FileUtils();
+		utils = new DataFile();
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class ServerHandler extends Thread {
 
 			if (obj instanceof String) {
 				readString(obj);
-			} else if (obj instanceof FileUtils) {
+			} else if (obj instanceof DataFile) {
 				readFile(obj);
 			}
 		} catch (Exception e) {
@@ -129,7 +129,7 @@ public class ServerHandler extends Thread {
 	}
 
 	private void readFile(Object obj) {
-		FileUtils fileUtils = (FileUtils) obj;
+		DataFile fileUtils = (DataFile) obj;
 		currentSize += 512;
 
 		// count percent progess 50% ...
@@ -149,7 +149,7 @@ public class ServerHandler extends Thread {
 				oos.flush();
 			}
 			// send attach file
-			else if (obj instanceof FileUtils) {
+			else if (obj instanceof DataFile) {
 				oos.writeObject(obj);
 				oos.flush();
 			}

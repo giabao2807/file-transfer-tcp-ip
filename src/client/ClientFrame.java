@@ -15,7 +15,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import utils.FileUtils;
+import data.DataFile;
 
 public class ClientFrame extends JFrame implements ActionListener, ISocketListener{
 	JTextField ipInput, portInput, searchInput;
@@ -48,7 +48,7 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 		this.add(ipLabel);
 		this.add(ipInput);
 		JLabel portLabel = new JLabel("PORT: ");
-		portInput = new JTextField("10");
+		portInput = new JTextField("2807");
 		portLabel.setBounds(100, 150, 150, 25);
 		portInput.setBounds(300, 150, 200, 25);
 		this.add(portLabel);
@@ -123,13 +123,15 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 
 	@Override
 	public void showDialog(String str, String type) {
-		// TODO Auto-generated method stub
-		
+		if (type.equals("ERROR"))
+			JOptionPane.showMessageDialog(this, str, type, JOptionPane.ERROR_MESSAGE);
+		else if (type.equals("INFOR"))
+			JOptionPane.showMessageDialog(this, str, type, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 
 	@Override
-	public String chooserFileToSave(FileUtils dataFile) {
+	public String chooserFileToSave(DataFile dataFile) {
 		JFileChooser fileChooser = new JFileChooser();
 		int returnVal = fileChooser.showOpenDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {

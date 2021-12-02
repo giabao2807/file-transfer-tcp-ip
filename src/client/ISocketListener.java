@@ -1,6 +1,6 @@
 package client;
 
-import utils.FileUtils;
+import data.DataFile;
 
 public interface ISocketListener {
 	void updateListFile(String[] listFile);
@@ -9,5 +9,5 @@ public interface ISocketListener {
 	
 	void showDialog(String str,String type);
 	
-	String chooserFileToSave(FileUtils dataFile);
+	String chooserFileToSave(DataFile dataFile);
 }

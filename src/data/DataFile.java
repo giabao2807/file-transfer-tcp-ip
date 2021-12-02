@@ -1,4 +1,4 @@
-package utils;
+package data;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileUtils {
+public class DataFile {
 	public byte[] data;
 	public int size;
 	public static int MAX_SIZE = 1024000*100;//1 MB
@@ -17,12 +17,12 @@ public class FileUtils {
 		size=0;
 	}
 	
-	public FileUtils() {
+	public DataFile() {
 		data = new byte[0];
 		size =0;
 	}
 	
-	public FileUtils(String filename) throws IOException {
+	public DataFile(String filename) throws IOException {
 		File file = new File(filename);
 		data =Files.readAllBytes(Paths.get(filename));
 		System.out.println(data);
