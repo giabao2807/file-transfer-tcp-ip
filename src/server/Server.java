@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 public class Server implements ISocketServerListener{
 	private final static int NUM_OF_THREAD = 10;
-	private final static int PORT =10;
+	private final static int PORT =2807;
 	
 	public static void main(String[] args) throws IOException {
 		Server server = new Server();

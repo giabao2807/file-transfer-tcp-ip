@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 
 public class FileWorker {
-	public static String URL_FOLDER ="/Users/dinhgiabao/Desktop/HK1-nam3/pbl4";
+	public static String URL_FOLDER ="/Users/dinhgiabao/Desktop/HK1-nam3/pbl4/abc";
 	
 	String[] getAllFileName() {
 		File file = new File(URL_FOLDER);

@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -17,13 +18,13 @@ import javax.swing.JTextField;
 
 import data.DataFile;
 
-public class ClientFrame extends JFrame implements ActionListener, ISocketListener{
+public class ClientFrame extends JFrame implements ActionListener, ISocketListener {
 	JTextField ipInput, portInput, searchInput;
 	JButton connectButton, disconnectButton, searchButton, downLoadFile, uploadFileButton;
 	JProgressBar jb;
 	JList<String> list;
-	
-	
+	ClientSocketThread clientSocketThread = null;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -32,10 +33,11 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 					ClientFrame frame = new ClientFrame();
 				} catch (Exception e) {
 					System.out.println(e);
-				}	
+				}
 			}
 		});
 	}
+
 	/**
 	 * Create the frame.
 	 */
@@ -108,18 +110,15 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 		this.setVisible(true);
 	}
 
-
 	@Override
 	public void updateListFile(String[] listFile) {
-		list.setListData(listFile);		
+		list.setListData(listFile);
 	}
-
 
 	@Override
 	public void setProgess(int n) {
-		jb.setValue(n);		
+		jb.setValue(n);
 	}
-
 
 	@Override
 	public void showDialog(String str, String type) {
@@ -128,7 +127,6 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 		else if (type.equals("INFOR"))
 			JOptionPane.showMessageDialog(this, str, type, JOptionPane.INFORMATION_MESSAGE);
 	}
-
 
 	@Override
 	public String chooserFileToSave(DataFile dataFile) {
@@ -147,11 +145,48 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 		return null;
 	}
 
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.getSource() == connectButton) {
+			String ip = ipInput.getText();
+			String port = portInput.getText();
+
+			System.out.println(ip + " : " + port);
+			try {
+				clientSocketThread = new ClientSocketThread(this);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+
+			clientSocketThread.setSocket(ip, Integer.parseInt(port));
+			clientSocketThread.start();
+		} else if (e.getSource() == disconnectButton) {
+			String[] data = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+			list.setListData(data);
+
+			if (clientSocketThread == null) {
+				this.showDialog("Chua bat SOCKET", "INFOR");
+				return;
+			}
+			clientSocketThread.closeSocket();
+		} else if (e.getSource() == searchButton) {
+			String search = searchInput.getText();
+
+			if (clientSocketThread != null) {
+				if (search.isEmpty())
+					clientSocketThread.sendString("VIEW_ALL_FILE");
+				else
+					clientSocketThread.sendString("SEARCH_FILE" + "--" + search);
+			}
+		} else if (e.getSource() == downLoadFile) {
+			if (list.getSelectedIndex()!=-1) {
+				String str = list.getSelectedValue();
+				List<String> lists = list.getSelectedValuesList();
+				clientSocketThread.sendString("DOWNLOAD_FILE" + "--" +str);
+			}
+		} else if (e.getSource()==uploadFileButton) {
+			
+		}
 	}
-	
+
 }
