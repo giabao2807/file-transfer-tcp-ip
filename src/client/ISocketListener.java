@@ -11,5 +11,7 @@ public interface ISocketListener {
 	void showDialog(String str, String type);
 
 	String chooserFileToSave(DataFile dataFile);
+	
+	String chooserFolderToSave(DataFile dataFile);
 
 }

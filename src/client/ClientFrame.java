@@ -197,5 +197,25 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 		}
 		return null;
 	}
+	
+	@Override
+	public String chooserFolderToSave(DataFile dataFile) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Choose folder to save");
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		
+		int returnVal = fileChooser.showOpenDialog(this);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File fileToSave = fileChooser.getSelectedFile();
+			String filePath = fileToSave.getPath();
+			try {
+				dataFile.saveFile(filePath);
+				JOptionPane.showMessageDialog(null, "File Saved");
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e);
+			}
+		}
+		return null;
+	}
 
 }
