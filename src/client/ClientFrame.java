@@ -199,7 +199,7 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 	}
 	
 	@Override
-	public String chooserFolderToSave(DataFile dataFile) {
+	public String chooserFolderToSave(DataFile dataFile,String fileName) {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Choose folder to save");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -208,9 +208,19 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getPath();
+			
+			System.out.println(filePath + "/" + fileName);
+			
+			FileWorker fileWorker = new FileWorker();
 			try {
-				dataFile.saveFile(filePath);
-				JOptionPane.showMessageDialog(null, "File Saved");
+				if(fileWorker.checkFile(fileName, filePath)) {
+					System.out.println(filePath + "/" + fileName);
+					dataFile.saveFile(filePath + "/" + fileName);
+					JOptionPane.showMessageDialog(null, "File Saved");
+				} else {
+					showDialog("File is existed in folder", "ERROR");
+				}
+				
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e);
 			}

@@ -112,7 +112,8 @@ public class ClientSocketThread extends Thread {
 			m_dtf.clear();
 			this.sendString("START_SEND_FILE");
 		} else if (str.contains("END_FILE")) {
-			iSocketListener.chooserFileToSave(m_dtf);
+			//iSocketListener.chooserFileToSave(m_dtf);
+			iSocketListener.chooserFolderToSave(m_dtf, fileNameReceived);
 		} else if (str.contains("ALL_FILE")) {
 			String[] listFile = str.split("--");
 			String[] yourArray = Arrays.copyOfRange(listFile, 1, listFile.length);
