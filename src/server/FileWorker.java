@@ -21,7 +21,7 @@ public class FileWorker {
 		String[] files = file.list();
 		ArrayList<String> fileSearches = new ArrayList<String>();
 		for (String file1 : files)
-			if (searchStringInFile(URL_FOLDER + "/" + file1, keyword))
+			if (searchStringInFile(URL_FOLDER + "/" + file1, keyword) || searchStringinFileName(file1, keyword))
 				fileSearches.add(file1);
 		for (int i = 0; i < fileSearches.size(); i++)
 			System.out.println("File searches : " + fileSearches.get(i));
@@ -31,6 +31,10 @@ public class FileWorker {
 		String[] result = new String[fileSearches.size()];
 		result = fileSearches.toArray(result);
 		return result;
+	}
+	
+	boolean searchStringinFileName(String fileName,String keyword) {
+		return fileName.contains(keyword);
 	}
 
 	boolean searchStringInFile(String fileName, String keyword) {
