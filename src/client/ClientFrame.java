@@ -1,11 +1,17 @@
 package client;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -25,108 +31,101 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 	JList<String> list;
 	ClientSocketThread clientSocketThread = null;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					ClientFrame frame = new ClientFrame();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the frame.
 	 */
-	public ClientFrame() {
-		// Connect Sever Form
-		JLabel ipLabel = new JLabel("IP: ");
-		ipInput = new JTextField("127.0.0.1");
-		ipLabel.setBounds(100, 100, 150, 25);
-		ipInput.setBounds(300, 100, 200, 25);
-		this.add(ipLabel);
-		this.add(ipInput);
-		JLabel portLabel = new JLabel("PORT: ");
-		portInput = new JTextField("2807");
-		portLabel.setBounds(100, 150, 150, 25);
-		portInput.setBounds(300, 150, 200, 25);
-		this.add(portLabel);
-		this.add(portInput);
+	public ClientFrame(String ip, String port) {
 
-		connectButton = new JButton("Connect");
-		disconnectButton = new JButton("Disconnect");
-		connectButton.setBounds(125, 200, 150, 25);
-		disconnectButton.setBounds(325, 200, 150, 25);
-		this.add(disconnectButton);
-		this.add(connectButton);
+		// Connect Sever Form
+		try {
+			clientSocketThread = new ClientSocketThread(this);
+			clientSocketThread.setSocket(ip, Integer.parseInt(port));
+			this.showDialog("CONNECTED TO SERVER", "INFOR");
+			clientSocketThread.start();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
 
 		// Search Form
 		JLabel searchLabel = new JLabel("Search: ");
 		searchInput = new JTextField();
-		searchButton = new JButton("Search");
-		searchLabel.setBounds(700, 100, 75, 25);
-		searchInput.setBounds(900, 100, 200, 25);
-		searchButton.setBounds(825, 200, 150, 25);
+		searchButton = new JButton();
+
+		searchLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		searchLabel.setForeground(parseColor("#6b4f4f"));
+		searchLabel.setBounds(50, 30, 150, 25);
+		searchInput.setBounds(110, 30, 200, 25);
+		searchButton.setBounds(290, 15, 130, 50);
+
 		this.add(searchButton);
 		this.add(searchInput);
 		this.add(searchLabel);
+		
+		
+		JLabel disconnectLabel = new JLabel("Disconnect:");
+		disconnectLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		disconnectLabel.setForeground(parseColor("#6b4f4f"));
+		disconnectLabel.setBounds(650, 80, 90, 20);
+		disconnectButton = new JButton();
+		disconnectButton.setBounds(680, 120, 50, 50);
+		this.add(disconnectLabel);
+		this.add(disconnectButton);
 
 		// Result List
 		list = new JList<>();
 		JScrollPane listScrollPane = new JScrollPane(list);
-		listScrollPane.setBounds(200, 400, 800, 350);
+		list.setBackground(parseColor("#fff3e4"));
+		list.setForeground(parseColor("#6b4f4f"));
+		listScrollPane.setBounds(50, 180, 710, 350);
 		this.add(listScrollPane);
 
+		JButton img = new JButton();
+		img.setBounds(415, 8, 215, 167);
+		this.add(img);
 		// JB
-		downLoadFile = new JButton("Download File");
-		downLoadFile.setBounds(700, 250, 150, 25);
+		downLoadFile = new JButton();
+		downLoadFile.setBounds(130, 60, 50, 50);
+
 		this.add(downLoadFile);
 
-		uploadFileButton = new JButton("Upload File");
-		uploadFileButton.setBounds(900, 250, 150, 25);
+		uploadFileButton = new JButton();
+		uploadFileButton.setBounds(235, 60, 50, 50);
+
 		this.add(uploadFileButton);
+
 		jb = new JProgressBar(0, 100);
-		jb.setBounds(700, 300, 100, 25);
+		jb.setBounds(50, 130, 260, 25);
 		jb.setValue(48);
 		jb.setStringPainted(true);
+
 		this.add(jb);
 
 		// Add event
-		connectButton.addActionListener(this);
-		disconnectButton.addActionListener(this);
 		searchButton.addActionListener(this);
 		downLoadFile.addActionListener(this);
 		uploadFileButton.addActionListener(this);
+		disconnectButton.addActionListener(this);
 
+		setupIcon(downLoadFile, "download");
+		setupIcon(searchButton, "search");
+		setupIcon(uploadFileButton, "up");
+		setupIcon(disconnectButton, "disconnect");
+		setupIcon(img, "img");
 		// setting Frame
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Client Frame");
 		this.setLocationRelativeTo(null);
 		this.setLayout(null);
-		this.setBounds(0, 0, 1200, 800);
+		this.setBounds(400, 100, 780, 600);
+		this.getContentPane().setBackground(parseColor("#eed6c4"));
 		this.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getSource() == connectButton) {
-			String ip = ipInput.getText();
-			String port = portInput.getText();
-			System.out.println(ip + " : " + port);
-			try {
-				clientSocketThread = new ClientSocketThread(this);
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			clientSocketThread.setSocket(ip, Integer.parseInt(port));
-			clientSocketThread.start();
-		} else if (e.getSource() == disconnectButton) {
+		 if (e.getSource() == disconnectButton) {
 
 			String[] data = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 			list.setListData(data);
@@ -181,6 +180,24 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 			JOptionPane.showMessageDialog(this, str, type, JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	private void setupIcon(JButton button, String img) {
+		try {
+			Image icon = ImageIO.read(getClass().getResource("/resources/" + img + ".png"));
+			ImageIcon imageIcon = new ImageIcon(icon);
+			button.setIcon(imageIcon);
+			button.setBorderPainted(false);
+			button.setFocusPainted(false);
+			button.setContentAreaFilled(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static Color parseColor(String colorStr) {
+		return new Color(Integer.valueOf(colorStr.substring(1, 3), 16), Integer.valueOf(colorStr.substring(3, 5), 16),
+				Integer.valueOf(colorStr.substring(5, 7), 16));
+	}
+
 	@Override
 	public String chooserFileToSave(DataFile dataFile) {
 		JFileChooser fileChooser = new JFileChooser();
@@ -197,30 +214,30 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 		}
 		return null;
 	}
-	
+
 	@Override
-	public String chooserFolderToSave(DataFile dataFile,String fileName) {
+	public String chooserFolderToSave(DataFile dataFile, String fileName) {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Choose folder to save");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
+
 		int returnVal = fileChooser.showOpenDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File fileToSave = fileChooser.getSelectedFile();
 			String filePath = fileToSave.getPath();
-			
+
 			System.out.println(filePath + "/" + fileName);
-			
+
 			FileWorker fileWorker = new FileWorker();
 			try {
-				if(fileWorker.checkFile(fileName, filePath)) {
+				if (fileWorker.checkFile(fileName, filePath)) {
 					System.out.println(filePath + "/" + fileName);
 					dataFile.saveFile(filePath + "/" + fileName);
 					JOptionPane.showMessageDialog(null, "File Saved");
 				} else {
 					showDialog("File is existed in folder", "ERROR");
 				}
-				
+
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e);
 			}

@@ -49,7 +49,6 @@ public class ClientSocketThread extends Thread {
 			os = socket.getOutputStream();
 			is = socket.getInputStream();
 
-			iSocketListener.showDialog("CONNECTED TO SERVER", "INFOR");
 			SendDataThread sendDataThread = new SendDataThread();
 			sendDataThread.start();
 		} catch (Exception e) {
@@ -68,9 +67,6 @@ public class ClientSocketThread extends Thread {
 				readData();
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				connectServerFail();
-				e.printStackTrace();
 				break;
 			}
 		}
@@ -90,10 +86,7 @@ public class ClientSocketThread extends Thread {
 				readFile(obj);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
 			connectServerFail();
-			closeSocket();
 		}
 	}
 
@@ -231,10 +224,7 @@ public class ClientSocketThread extends Thread {
 	}
 
 	private void connectServerFail() {
-		// TODO Auto-generated method stub
-		iSocketListener.showDialog("Can't connect to Server", "ERROR");
 		isStop = true;
-		closeSocket();
 	}
 
 	public void closeSocket() {

@@ -48,12 +48,10 @@ public class ServerHandler extends Thread {
 	@Override
 	public void run() {
 		System.out.println("Processing: " + socket);
-		// TODO Auto-generated method stub
 		while (!isStop) {
 			try {
 				readData();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				connectClientFail();
 				e.printStackTrace();
 				break;
@@ -79,10 +77,8 @@ public class ServerHandler extends Thread {
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			connectClientFail();
-			closeSocket();
 		}
 	}
 
