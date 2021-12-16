@@ -134,6 +134,11 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 				return;
 			}
 			clientSocketThread.closeSocket();
+			
+			ClientMain clientFrameStart = new ClientMain();
+			clientFrameStart.setVisible(true);
+			this.dispose();
+			
 		} else if (e.getSource() == searchButton) {
 			String search = searchInput.getText();
 
