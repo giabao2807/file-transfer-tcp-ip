@@ -134,7 +134,7 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 				return;
 			}
 			clientSocketThread.closeSocket();
-			
+			this.showDialog("Closed socket", "INFOR");
 			ClientMain clientFrameStart = new ClientMain();
 			clientFrameStart.setVisible(true);
 			this.dispose();

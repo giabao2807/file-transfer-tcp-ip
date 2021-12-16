@@ -91,8 +91,10 @@ public class ServerHandler extends Thread {
 		else if (str.equals("VIEW_ALL_FILE")) {
 			String[] files = fileWorker.getAllFileName();
 			String data = "ALL_FILE";
+			int i = 1;
 			for (String file : files) {
-				data += "--" + file;
+				data += "--" + i + ". " + file;
+				i++;
 			}
 			this.sendString(data);
 		} else if (str.contains("SEARCH_FILE")) {
@@ -100,8 +102,10 @@ public class ServerHandler extends Thread {
 
 			String[] files = fileWorker.searchFile(searches[1]);
 			String data = "ALL_FILE";
+			int i = 1;
 			for (String file : files) {
-				data += "--" + file;
+				data += "--" + i + ". " + file;
+				i++;
 			}
 			this.sendString(data);
 		} else if (str.contains("DOWNLOAD_FILE")) {

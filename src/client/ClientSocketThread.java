@@ -159,8 +159,6 @@ public class ClientSocketThread extends Thread {
 				fin.close();
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		} else if (sendType == SEND_TYPE.START_SEND_FILE) {
 			File source = new File(fileName);
@@ -180,8 +178,6 @@ public class ClientSocketThread extends Thread {
 					iSocketListener.setProgress((int) (total * 100 / lenghtOfFile));
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			// Send End File: fileName + size
 			sendMessage("END_FILE--" + fileName + "--" + lenghtOfFile);
@@ -239,7 +235,6 @@ public class ClientSocketThread extends Thread {
 			if (socket != null)
 				socket.close();
 
-			iSocketListener.showDialog("Closed socket", "INFOR");
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -80,6 +80,7 @@ public class ClientMain extends JFrame implements ActionListener, ISocketListene
 	
 		// Add event
 		connectButton.addActionListener(this);
+		closeButton.addActionListener(this);
 		
 		
 		// setting Frame
@@ -125,6 +126,8 @@ public class ClientMain extends JFrame implements ActionListener, ISocketListene
 			ClientFrame clientFrame = new ClientFrame(ip,port);
 			clientFrame.setVisible(true);
 			this.hide();
+		} else if (e.getSource()==closeButton) {
+			this.dispose();
 		}
 	}
 
