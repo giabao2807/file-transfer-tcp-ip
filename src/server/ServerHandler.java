@@ -8,8 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import data.DataFile;
-import data.SEND_TYPE;
+import serverUtils.DataFile;
+import serverUtils.SEND_TYPE;
 
 public class ServerHandler extends Thread {
 
@@ -26,7 +26,7 @@ public class ServerHandler extends Thread {
 	String message;
 	String fileName;
 
-	FileWorker fileWorker;
+	FileHandle fileWorker;
 	private long fileSize;
 	private String fileNameReceived;
 	private long currentSize;
@@ -38,7 +38,7 @@ public class ServerHandler extends Thread {
 		is = socket.getInputStream();
 
 		this.iSocketServerListener = iSocketServerListener;
-		fileWorker = new FileWorker();
+		fileWorker = new FileHandle();
 		SendDataThread sendDataThread = new SendDataThread();
 		sendDataThread.start();
 
@@ -126,7 +126,7 @@ public class ServerHandler extends Thread {
 			else
 				this.sendString("ERROR--FILE Trung Ten");
 		} else if (str.contains("END_FILE")) {
-			m_dtf.saveFile(FileWorker.URL_FOLDER + "/" + fileNameReceived);
+			m_dtf.saveFile(FileHandle.URL_FOLDER + "/" + fileNameReceived);
 		}
 
 		return str;
@@ -137,7 +137,6 @@ public class ServerHandler extends Thread {
 		currentSize += 512;
 
 		int percent = (int) (currentSize * 100 / fileSize);
-		// System.out.println(currentSize + " : " + fileSize);
 		m_dtf.appendByte(dtf.data);
 		iSocketServerListener.showProgessBarPercent(percent);
 	}
@@ -145,13 +144,10 @@ public class ServerHandler extends Thread {
 	class SendDataThread extends Thread {
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			while (!isStop) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 				if (sendType != SEND_TYPE.DO_NOT_SEND)
 					sendData();
@@ -160,11 +156,10 @@ public class ServerHandler extends Thread {
 	}
 
 	private void sendData() {
-		// TODO Auto-generated method stub
 		if (sendType == SEND_TYPE.SEND_STRING) {
 			sendMessage(message);
 		} else if (sendType == SEND_TYPE.SEND_FILE) {
-			File source = new File(FileWorker.URL_FOLDER + "/" + fileName);
+			File source = new File(FileHandle.URL_FOLDER + "/" + fileName);
 			InputStream fin;
 			try {
 				fin = new FileInputStream(source);
@@ -174,12 +169,11 @@ public class ServerHandler extends Thread {
 				fin.close();
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		} else if (sendType == SEND_TYPE.START_SEND_FILE) {
-			File source = new File(FileWorker.URL_FOLDER + "/" + fileName);
+			File source = new File(FileHandle.URL_FOLDER + "/" + fileName);
 			InputStream fin = null;
 			long lenghtOfFile = source.length();
 			// Send file : file data
@@ -194,11 +188,8 @@ public class ServerHandler extends Thread {
 					dtf.data = buf;
 					sendMessage(dtf);
 					iSocketServerListener.showProgessBarPercent(total * 100 / lenghtOfFile);
-					// iSocketServerListener.showDialog("File send " + total * 100 / lenghtOfFile,
-					// "INFOR");
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			// Send End File: fileName + size
@@ -237,13 +228,10 @@ public class ServerHandler extends Thread {
 				oos.flush();
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 
 	private void connectClientFail() {
-		// TODO Auto-generated method stub
-		// serverHelper.connectFail();
 		isStop = true;
 		closeSocket();
 	}
@@ -261,8 +249,6 @@ public class ServerHandler extends Thread {
 			iSocketServerListener.showDialog("Closed Server Socket", "INFOR");
 
 		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
 			iSocketServerListener.showDialog("Connect Fail", "ERROR");
 		}
 	}

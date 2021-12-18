@@ -5,18 +5,18 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class FileWorker {
+public class FileHandle {
 
 	public static String URL_FOLDER = "/Users/dinhgiabao/Desktop/HK1-nam3/pbl4/abc";
 
-	String[] getAllFileName() {
+	public String[] getAllFileName() {
 		File file = new File(URL_FOLDER);
 		String[] files = file.list();
 
 		return files;
 	}
 
-	String[] searchFile(String keyword) {
+	public String[] searchFile(String keyword) {
 		File file = new File(URL_FOLDER);
 		String[] files = file.list();
 		ArrayList<String> fileSearches = new ArrayList<String>();
@@ -25,8 +25,6 @@ public class FileWorker {
 				fileSearches.add(file1);
 		for (int i = 0; i < fileSearches.size(); i++)
 			System.out.println("File searches : " + fileSearches.get(i));
-//		if (fileSearches.isEmpty())
-//			return null;
 
 		String[] result = new String[fileSearches.size()];
 		result = fileSearches.toArray(result);
@@ -53,7 +51,6 @@ public class FileWorker {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			// handle this
 		}
 		return false;
 	}

@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import data.DataFile;
+import clientUtils.DataFile;
 
 public class ClientMain extends JFrame implements ActionListener, ISocketListener {
 	JTextField ipInput, portInput;

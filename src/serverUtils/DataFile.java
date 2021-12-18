@@ -1,4 +1,4 @@
-package data;
+package serverUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

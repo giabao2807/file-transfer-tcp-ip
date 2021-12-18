@@ -22,7 +22,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import data.DataFile;
+import clientUtils.DataFile;
+import clientUtils.FileUtils;
 
 public class ClientFrame extends JFrame implements ActionListener, ISocketListener {
 	JTextField ipInput, portInput, searchInput;
@@ -233,7 +234,7 @@ public class ClientFrame extends JFrame implements ActionListener, ISocketListen
 
 			System.out.println(filePath + "/" + fileName);
 
-			FileWorker fileWorker = new FileWorker();
+			FileUtils fileWorker = new FileUtils();
 			try {
 				if (fileWorker.checkFile(fileName, filePath)) {
 					System.out.println(filePath + "/" + fileName);

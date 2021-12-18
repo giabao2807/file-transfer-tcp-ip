@@ -1,6 +1,6 @@
 package client;
 
-import data.DataFile;
+import clientUtils.DataFile;
 
 public interface ISocketListener {
 

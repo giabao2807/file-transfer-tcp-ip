@@ -9,8 +9,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 
-import data.DataFile;
-import data.SEND_TYPE;
+import clientUtils.DataFile;
+import clientUtils.SEND_TYPE;
 
 public class ClientSocketThread extends Thread {
 

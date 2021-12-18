@@ -1,4 +1,4 @@
-package data;
+package serverUtils;
 
 public enum SEND_TYPE {
 

@@ -1,9 +1,9 @@
-package client;
+package clientUtils;
 
 import java.io.File;
 
-public class FileWorker {
-	public FileWorker() {
+public class FileUtils {
+	public FileUtils() {
 	}
 	
 	public boolean checkFile(String fileNameReceived,String path) {
