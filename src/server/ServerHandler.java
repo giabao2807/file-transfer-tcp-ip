@@ -8,8 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import serverUtils.DataFile;
-import serverUtils.SEND_TYPE;
+import clientUtils.DataFile;
+import clientUtils.SEND_TYPE;
 
 public class ServerHandler extends Thread {
 
@@ -93,7 +93,7 @@ public class ServerHandler extends Thread {
 			String data = "ALL_FILE";
 			int i = 1;
 			for (String file : files) {
-				data += "--" + i + ". " + file;
+				data += "--" + file;
 				i++;
 			}
 			this.sendString(data);
@@ -104,7 +104,7 @@ public class ServerHandler extends Thread {
 			String data = "ALL_FILE";
 			int i = 1;
 			for (String file : files) {
-				data += "--" + i + ". " + file;
+				data += "--"  + file;
 				i++;
 			}
 			this.sendString(data);
